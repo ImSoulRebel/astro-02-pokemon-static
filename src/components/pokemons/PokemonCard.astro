@@ -4,24 +4,35 @@ import type { Pokemonresponse } from "../../interfaces/pokemon.response";
 interface Props {
   url: string;
   name: string;
+  isDetail?: boolean;
 }
 
-const { url, name } = Astro.props;
+const { url, name, isDetail = false } = Astro.props;
 
 const resp = await fetch(url);
 const data = (await resp.json()) as Pokemonresponse;
 
 const image = data.sprites.other?.["official-artwork"].front_default;
 const audioSrc = data.cries.latest;
+const id = data.id
 ---
 
 <a
   href={`/pokemons/${name}`}
-  class="rounded border flex flex-col justify-center items-center p-2"
+  class:list={[
+    `rounded  flex flex-col justify-center items-center p-2`,
+    {border: !isDetail}
+    ]}
 >
-  <img src={image} alt={name} />
-  <span class="capitalize">{name}</span>
-  <audio controls class="mt-5">
+  <img class:list={[
+{ "w-26 h-26": isDetail,
+  "w-16 h-16": !isDetail,}
+  ]} src={image} alt={name} />
+  <span class:list={[
+    `capitalize`,
+    {"text-4xl": isDetail,}
+  ]}>#{id} {name}</span>
+  {isDetail ? <audio controls class="mt-5">
     <source src={audioSrc} type="audio/ogg" />
-  </audio>
+  </audio> : <></>}
 </a>

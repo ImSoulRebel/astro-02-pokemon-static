@@ -1,10 +1,24 @@
 ---
-import type { GetStaticPaths } from "astro";
-import MainLayout from "../../layouts/MainLayout.astro";
 import PokemonCard from "../../components/pokemons/PokemonCard.astro";
+import type { PokemonListResponse } from "../../interfaces/pokemon-list.response";
+import MainLayout from "../../layouts/MainLayout.astro";
 
-export const getStaticPaths = (() => {
-  return [
+export const getStaticPaths = async() => {
+
+const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+const {results} = await resp.json() as PokemonListResponse;
+
+
+return results.map(({name, url}) => ({
+  params: {
+    name,
+  },
+  props: {
+    name,
+    url,
+  },
+})) ;}
+/*  return [
     {
       params: { name: "bulbasaur" },
       props: { name: "bulbasaur", url: "http://pokeapi.co/api/v2/pokemon/1" },
@@ -14,7 +28,7 @@ export const getStaticPaths = (() => {
       props: { name: "charmander", url: "http://pokeapi.co/api/v2/pokemon/4" },
     },
   ];
-}) satisfies GetStaticPaths;
+}) satisfies GetStaticPaths; */
 
 const { name } = Astro.params;
 const { url } = Astro.props;
@@ -26,7 +40,7 @@ const { url } = Astro.props;
       <a href="/">regresar</a>
       <h1 class="text-5xl capitalize">{name}</h1>
     </div>
-    <PokemonCard url={url} name={name} />
+    <PokemonCard url={url} name={name} isDetail/>
   </section>
 </MainLayout>
 
