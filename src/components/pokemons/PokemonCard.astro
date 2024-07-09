@@ -1,0 +1,27 @@
+---
+import type { Pokemonresponse } from "../../interfaces/pokemon.response";
+
+interface Props {
+  url: string;
+  name: string;
+}
+
+const { url, name } = Astro.props;
+
+const resp = await fetch(url);
+const data = (await resp.json()) as Pokemonresponse;
+
+const image = data.sprites.other?.["official-artwork"].front_default;
+const audioSrc = data.cries.latest;
+---
+
+<a
+  href={`/pokemons/${name}`}
+  class="rounded border flex flex-col justify-center items-center p-2"
+>
+  <img src={image} alt={name} />
+  <span class="capitalize">{name}</span>
+  <audio controls class="mt-5">
+    <source src={audioSrc} type="audio/ogg" />
+  </audio>
+</a>
