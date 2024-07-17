@@ -1,32 +1,36 @@
 ---
-import type { Pokemonresponse } from "../../interfaces/pokemon.response";
+import type { Pokemonresponse } from '@interfaces/pokemon.response';
 
 interface Props {
-  url: string;
+
   name: string;
+  url:string;
   isDetail?: boolean;
 }
 
-const { url, name, isDetail = false } = Astro.props;
+const {name, url,  isDetail = false } = Astro.props;
+
 
 const resp = await fetch(url);
 const data = (await resp.json()) as Pokemonresponse;
 
 const image = data.sprites.other?.["official-artwork"].front_default;
 const audioSrc = data.cries.latest;
-const id = data.id
+const id = data.id;
 ---
-
+<!-- href={`/pokemons/${name}`} -->
 <a
-  href={`/pokemons/${name}`}
+  href={`/pokemon/${id}`}
   class:list={[
     `rounded  flex flex-col justify-center items-center p-2`,
     {border: !isDetail}
     ]}
 >
-  <img class:list={[
+  <img 
+  transition:name={`/pokemons/${name}`}
+  class:list={[
 { "w-26 h-26": isDetail,
-  "w-16 h-16": !isDetail,}
+  "w-22 h-22": !isDetail,}
   ]} src={image} alt={name} />
   <span class:list={[
     `capitalize`,

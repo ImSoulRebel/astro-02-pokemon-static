@@ -3,21 +3,20 @@ import PokemonCard from "../../components/pokemons/PokemonCard.astro";
 import type { PokemonListResponse } from "../../interfaces/pokemon-list.response";
 import MainLayout from "../../layouts/MainLayout.astro";
 
-export const getStaticPaths = async() => {
+export const getStaticPaths = async () => {
+  const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+  const { results } = (await resp.json()) as PokemonListResponse;
 
-const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
-const {results} = await resp.json() as PokemonListResponse;
-
-
-return results.map(({name, url}) => ({
-  params: {
-    name,
-  },
-  props: {
-    name,
-    url,
-  },
-})) ;}
+  return results.map(({ name, url }) => ({
+    params: {
+      name,
+    },
+    props: {
+      name,
+      url,
+    },
+  }));
+};
 /*  return [
     {
       params: { name: "bulbasaur" },
@@ -34,13 +33,17 @@ const { name } = Astro.params;
 const { url } = Astro.props;
 ---
 
-<MainLayout title={name}>
+<MainLayout
+  title={`Pokémon - ${name}`}
+  description=`Información sobre el pokémon ${name}`
+  image=""
+>
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
     <div>
       <a href="/">regresar</a>
       <h1 class="text-5xl capitalize">{name}</h1>
     </div>
-    <PokemonCard url={url} name={name} isDetail/>
+    <PokemonCard name={name} url={url} isDetail />
   </section>
 </MainLayout>
 

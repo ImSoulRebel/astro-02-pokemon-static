@@ -1,0 +1,40 @@
+---
+import type { GetStaticPaths } from "astro";
+import MainLayout from "@layouts/MainLayout.astro";
+import type { PokemonListResponse } from "@interfaces/pokemon-list.response";
+import PokemonCard from "@components/pokemons/PokemonCard.astro";
+
+export const getStaticPaths = (async () => {
+  const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+  const data = (await resp.json()) as PokemonListResponse;
+
+  return data.results.map(({ name, url }) => ({
+    params: {
+      id: url.split("/").at(-2),
+    },
+    props: {
+      name,
+      url,
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { name } = Astro.props;
+const { url } = Astro.props;
+---
+
+<MainLayout title={name}>
+  <section class="mt-10 mx-10 flex flex-col justify-center items-center">
+    <div>
+      <a href="/">regresar</a>
+      <h1 class="text-5xl capitalize">{name}</h1>
+    </div>
+    <PokemonCard url={url} name={name} isDetail />
+  </section>
+</MainLayout>
+
+<style>
+  a {
+    @apply hover:underline text-blue-500;
+  }
+</style>
