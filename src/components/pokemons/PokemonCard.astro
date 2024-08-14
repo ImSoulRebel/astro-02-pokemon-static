@@ -2,7 +2,6 @@
 import type { Pokemonresponse } from '@interfaces/pokemon.response';
 
 interface Props {
-
   name: string;
   url:string;
   isDetail?: boolean;
@@ -18,9 +17,9 @@ const image = data.sprites.other?.["official-artwork"].front_default;
 const audioSrc = data.cries.latest;
 const id = data.id;
 ---
-<!-- href={`/pokemons/${name}`} -->
+<!--   href={`/pokemon/${id}`} -->
 <a
-  href={`/pokemon/${id}`}
+  href={`/pokemons/${name}`}
   class:list={[
     `rounded  flex flex-col justify-center items-center p-2`,
     {border: !isDetail}

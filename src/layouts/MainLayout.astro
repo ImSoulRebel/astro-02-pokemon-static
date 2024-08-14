@@ -1,5 +1,7 @@
 ---
 // import { ViewTransitions } from "astro:transitions";
+import NavBar from "@components/shared/NavBar.astro";
+import { ViewTransitions } from "astro:transitions";
 import { siteInfo } from "src/constants/site-info";
 
 interface Props {
@@ -35,16 +37,18 @@ const {
 
     <!-- Required -->
     <title>{title}</title>
-    <!-- <ViewTransitions /> -->
+    <ViewTransitions />
   </head>
-  <body class="bg-slate-800 text-slate-100 m-auto max-w-3xl">
-    <main class="mt-10">
+  <body class="bg-slate-800 text-slate-100 flex flex-col min-h-screen">
+    <NavBar />
+    <main class="mt-10 mx-auto flex-grow w-full max-w-4xl px-4">
       <slot />
     </main>
   </body>
 </html>
-<style>a
-  @view-transition {
+
+<!-- Solo funciona en navegadores muy nuevos de chrome -->
+<!-- <style>
     navigation: auto;
   }
-</style>
+</style> -->
